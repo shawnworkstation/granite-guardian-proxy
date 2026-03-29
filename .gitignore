@@ -1,0 +1,10 @@
+.venv/
+.env
+certs/
+*.pem
+.git/
+*.log
+__pycache__/
+*.pyc
+*.pyo
+.DS_Store
