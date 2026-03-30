@@ -78,13 +78,6 @@ The certificate is valid for both `nginx` (Docker service name) and
 ```bash
 docker compose up --build
 ```
-
-Run in background:
-```bash
-docker compose up --build -d
-docker compose logs -f
-```
-
 Stop all services:
 ```bash
 docker compose down
