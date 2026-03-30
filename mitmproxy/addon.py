@@ -50,10 +50,8 @@ GUARDIAN_SYSTEM_PROMPT = (
 
 _cached_token: str | None = None
 
-
 def get_ibm_token() -> str:
     """Exchange the IBM API key for a short-lived IAM access token.
-
     Tokens are cached in memory and reused until the process restarts.
 
     Returns:
@@ -79,12 +77,10 @@ def get_ibm_token() -> str:
     print("[Guardian] IBM token obtained")
     return _cached_token
 
-
 # --- content classification ----------------------------------------------
 
 def _classify_reason(text: str) -> str:
     """Map text to one of the three required harm categories.
-
     Falls back to 'toxic content' if no keyword pattern matches.
 
     Args:
@@ -101,10 +97,8 @@ def _classify_reason(text: str) -> str:
         return "sexual content"
     return "toxic content"
 
-
 def _extract_score(data: dict, harmful: bool) -> float:
     """Extract a 0.0-1.0 toxicity score from Guardian logprobs.
-
     Falls back to a binary score if logprobs are unavailable.
 
     Args:
@@ -123,7 +117,6 @@ def _extract_score(data: dict, harmful: bool) -> float:
     except (KeyError, IndexError):
         pass
     return 1.0 if harmful else 0.0
-
 
 def check_with_guardian(text: str) -> tuple[bool, str | None, float]:
     """Send text to Granite Guardian and return a safety assessment.
@@ -170,7 +163,6 @@ def check_with_guardian(text: str) -> tuple[bool, str | None, float]:
 
     return harmful, reason, score
 
-
 # --- response builder ----------------------------------------------------
 
 def make_blocked_response(
@@ -179,7 +171,6 @@ def make_blocked_response(
     source: Literal["prompt", "response"],
 ) -> str:
     """Build a synthetic OpenAI-format response for a blocked request.
-
     The response mirrors the OpenAI chat completion schema so the client
     needs no special handling for blocked content.
 
@@ -205,7 +196,6 @@ def make_blocked_response(
         "guardian_score": round(score, 3),
         "guardian_threshold": TOXICITY_THRESHOLD,
     })
-
 
 # --- mitmproxy addon -----------------------------------------------------
 
@@ -256,7 +246,6 @@ class GuardianAddon:
 
     def request(self, flow: http.HTTPFlow) -> None:
         """Intercept outgoing requests and check prompts with Guardian.
-
         Rewrites the host to api.openai.com when traffic arrives via NGINX,
         then checks the user prompt before forwarding.
 
@@ -297,7 +286,6 @@ class GuardianAddon:
 
     def response(self, flow: http.HTTPFlow) -> None:
         """Intercept incoming responses and check replies with Guardian.
-
         Skips Guardian-generated blocked responses to avoid double-checking.
 
         Args:
@@ -325,6 +313,5 @@ class GuardianAddon:
 
         print(f"[Guardian] Response: {reply[:80]}")
         self._check_and_block(flow, reply, "response")
-
 
 addons = [GuardianAddon()]

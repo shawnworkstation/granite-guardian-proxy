@@ -44,8 +44,6 @@ services:
       - nginx
     networks:
       - proxy-network
-    # depends_on only waits for nginx to start, not to be ready.
-    # client retries are handled by the OpenAI SDK's built-in retry logic.
 
 networks:
   proxy-network:
