@@ -119,21 +119,3 @@ Blocked requests return HTTP 200 with an OpenAI-compatible response:
 
 `total_tokens: 0` confirms OpenAI was never called. `guardian_score` shows
 the confidence score that triggered the block.
-
-## Troubleshooting
-
-**IBM 403 — project not associated with WML instance**
-Your IBM project must be in the same region as `IBM_URL`. Use `us-south` —
-Toronto (`ca-tor`) does not support Granite Guardian.
-
-**SSL certificate verify failed — hostname mismatch**
-Regenerate the certificate using the command in step 3. The
-`subjectAltName` must include `DNS:nginx` for Docker internal routing.
-
-**ValueError on TOXICITY_THRESHOLD at startup**
-Check `.env` — `TOXICITY_THRESHOLD` must have a numeric value such as
-`0.7`, not an empty string.
-
-**Client gets 301 Moved Permanently**
-Ensure `client.py` connects to `https://nginx/v1` not `http://nginx` and
-that port 80 is not exposed in `docker-compose.yml`.
